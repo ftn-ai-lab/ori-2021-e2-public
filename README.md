@@ -5,7 +5,7 @@
 
 #### 00-intro
 
-* Pravlia polaganja, podešavanje okruženja, Python osnove (podsetnik)
+* Pravila polaganja, podešavanje okruženja, Python osnove (podsetnik)
 
 
 #### 01-search-board

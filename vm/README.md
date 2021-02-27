@@ -24,7 +24,7 @@ Za potrebe kursa je razvijena virtuelna mašina sa sledecim sadržajem:
 
 1. Instalirati <a href="https://www.virtualbox.org/">Oracle VM VirtualBox (5.2.x)</a>.
 
-2. Preuzeti datoteku SoftComputingVM.zip sa sledeceg <a href="https://docs.google.com/document/d/1eLseOpRWOi08OvWYGnB2AWblmpfkTSmZs118pd8mO6Q/edit?usp=sharing">linka</a>.  
+2. Preuzeti datoteku SoftComputingVM.zip sa sledeceg <a href="https://drive.google.com/drive/folders/1C2C1FmPI2fb1B_8gqGIfsazbN1Bag0_P?usp=sharing">linka</a>.  
 
 3. Raspakovati datoteku SoftComputingVM.zip -> dobice se datoteka SoftComputingVM.vdi.
 4. Otvoriti VirtualBox i napraviti novu VM: New -> Name: SoftComputingVM, Type: Linux, Version: Ubuntu (64-bit) -> Next.
