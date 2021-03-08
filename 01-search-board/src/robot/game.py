@@ -13,14 +13,14 @@ from state import *
 
 def load_board_from_file(filename=None):
     if filename is None:
-        filename = tkFileDialog.askopenfilename(defaultextension='.brd',
+        filename = filedialog.askopenfilename(defaultextension='.brd',
                                                 filetypes=(('board files', '*.brd'), ('All files', '*.*')))
     board.load_from_file(filename)
     return filename
 
 
 def save_board_to_file():
-    filename = tkFileDialog.asksaveasfilename(defaultextension='.brd',
+    filename = filedialog.asksaveasfilename(defaultextension='.brd',
                                               filetypes=(('board files', '*.brd'), ('All files', '*.*')))
     board.save_to_file(filename)
 
