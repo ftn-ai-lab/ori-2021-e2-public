@@ -1,5 +1,5 @@
 import copy
-
+import random
 
 class State(object):
     """
@@ -36,7 +36,8 @@ class State(object):
                         new_board.move_piece(row, col, legal_move[0], legal_move[1])
                         next_state = State(new_board, self)
                         next_states.append(next_state)
-        # TODO 5: Izmesati listu moguca sledeca stanja (da ne budu uvek u istom redosledu)
+    
+        random.shuffle(next_states)
         return next_states
 
     def calculate_value(self):
@@ -44,5 +45,7 @@ class State(object):
         Evaluaciona funkcija za stanje.
         :return:
         """
-        # TODO 3: Implementirati jednostavnu evaluacionu funkciju (suma vrednosti svih figura na tabli)
+        self.value = self.board.score
         return self.value
+
+
