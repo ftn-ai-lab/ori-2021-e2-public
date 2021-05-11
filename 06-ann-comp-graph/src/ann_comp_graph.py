@@ -132,6 +132,7 @@ class NeuronNode(ComputationalNode):
 
     def backward(self, dz):
         dw = []
+        dx = []
         d = dz[0] if type(dz[0]) == float else sum(dz)  # u d se nalazi spoljasnji gradijent izlaza neurona
 
         # TODO 8: implementirati backward-pass za vestacki neuron
@@ -140,7 +141,7 @@ class NeuronNode(ComputationalNode):
         raise NotImplementedError('TODO 8')
 
         self.gradients = dw
-        return dw
+        return dx
 
     def update_weights(self, learning_rate, momentum):
         # azuriranje tezina vestackog neurona
