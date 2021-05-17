@@ -106,6 +106,7 @@ class NeuronNode(ComputationalNode):
     def forward(self, x):  # x is a vector of inputs
         x = copy.copy(x)
         x.append(1.)  # for bias
+
         for_sum = []
         for i, xx in enumerate(x):
             inp = [x[i], self.multiply_nodes[i].x[1]]
@@ -117,18 +118,21 @@ class NeuronNode(ComputationalNode):
 
     def backward(self, dz):
         dw = []
+        dx = []
         b = dz[0] if type(dz[0]) == float else sum(dz)
+        
         b = self.activation_node.backward(b)
         b = self.sum_node.backward(b)
         for i, bb in enumerate(b):
             dw.append(self.multiply_nodes[i].backward(bb)[1])
+            dx.append(self.multiply_nodes[i].backward(bb)[0])
 
-        self.gradients.append(dw)
-        return dw
+        self.gradients= dw
+        return dx
 
     def update_weights(self, learning_rate, momentum):
         for i, multiply_node in enumerate(self.multiply_nodes):
-            mean_gradient = sum([grad[i] for grad in self.gradients]) / len(self.gradients)
+            mean_gradient = self.gradients[i]
             delta = learning_rate*mean_gradient + momentum*self.previous_deltas[i]
             self.previous_deltas[i] = delta
             self.multiply_nodes[i].x[1] -= delta
@@ -250,13 +254,14 @@ if __name__ == '__main__':
          [1., 0.],
          [0., 1.],
          [1., 1.]]
+    # 1 >0.5 
     Y = [[0.],
          [1.],
          [1.],
          [0.]]
 
     # obucavanje neuronske mreze
-    history = nn.fit(X, Y, learning_rate=0.1,  momentum=0.3, nb_epochs=10000, shuffle=True, verbose=0)
+    history = nn.fit(X, Y, learning_rate=0.1,  momentum=0.9, nb_epochs=3000, shuffle=True, verbose=0)
 
     # provera da li radi
     print(nn.predict([0., 0.]))
