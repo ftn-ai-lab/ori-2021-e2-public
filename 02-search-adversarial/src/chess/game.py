@@ -88,7 +88,7 @@ def move_piece(event, row=None, col=None):
         # --------------------------------
         if from_row != row or from_col != col:
             start = time.perf_counter()
-            search = Minimax(board, 1)  # ovde promeniti koji se algoritam koristi i koja je dubina pretrage
+            search = Minimax(board, 3)  # ovde promeniti koji se algoritam koristi i koja je dubina pretrage
             next_state = search.perform_adversarial_search()  # izvrsi pretragu
             end = time.perf_counter()
             duration = end - start

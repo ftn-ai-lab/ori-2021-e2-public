@@ -1,6 +1,15 @@
 from abc import *
 
 
+def valid_position(position, board):
+    [row, col] = position
+    return 0 <= row <= board.rows - 1 and 0 <= col <= board.cols - 1
+
+opposite_size = {
+    'b': 'w',
+    'w': 'b'
+}
+
 class Piece(object):
     """
     Apstraktna klasa za sahovske figure.
@@ -65,8 +74,22 @@ class Pawn(Piece):
                 d_rows.append(-1)
                 d_cols.append(1)
         else:  # crni pijun
-            # TODO 2: Implementirati moguce sledece poteze za crnog pijuna
-            pass
+            # jedan unapred, ako je polje prazno
+            if row < self.board.rows - 1 and self.board.data[row+1][col] == '.':
+                d_rows.append(+1)
+                d_cols.append(0)
+            # dva unapred, ako je pocetna pozicija i ako je polje prazno
+            if row ==  1 and self.board.data[row+1][col] == '.' and self.board.data[row + 2][col] == '.':
+                d_rows.append(+2)
+                d_cols.append(0)
+            # ukoso levo, jede crnogç
+            if col < self.board.cols - 1 and row < self.board.rows - 1 and self.board.data[row+1][col+1].startswith('w'):
+                d_rows.append(+1)
+                d_cols.append(+1)
+            # ukoso desno, jede crnog
+            if col > 0 and row < self.board.rows - 1 and self.board.data[row+1][col-1].startswith('w'):
+                d_rows.append(+1)
+                d_cols.append(-1)
 
         for d_row, d_col in zip(d_rows, d_cols):
                 new_row = row + d_row
@@ -85,12 +108,28 @@ class Knight(Piece):
     Konj
     """
     def get_legal_moves(self):
-        # TODO
-        pass
+        row = self.row
+        col = self.col
+        side = self.side
+        legal_moves = []
+
+        steps = range(0, self.board.rows)
+        directions = [(2,1), (2,-1), (-2, 1), (-2, -1), (1,2), (-1,2), (1, -2), (-1 ,-2)]
+
+        for (d_row, d_col) in directions:
+            cur_row = row + d_row
+            cur_col = col + d_col
+            temp_position = [cur_row, cur_col]
+            if valid_position(temp_position, self.board):
+                opposite_piece = self.board.data[cur_row][cur_col].startswith(opposite_size[side])
+                blank_field = self.board.data[cur_row][cur_col] == '.'
+                if opposite_piece or blank_field:
+                    legal_moves.append((cur_row, cur_col))
+        
+        return legal_moves
 
     def get_value_(self):
-        # TODO
-        pass
+        return 3
 
 
 class Bishop(Piece):
@@ -98,12 +137,37 @@ class Bishop(Piece):
     Lovac
     """
     def get_legal_moves(self):
-        # TODO
-        pass
+        row = self.row
+        col = self.col
+        side = self.side
+        legal_moves = []
+
+        steps = range(0, self.board.rows)
+        directions = [(1,1), (-1,-1), (1, -1), (-1, 1)]
+
+        for (d_row, d_col) in directions:
+            cur_row = row
+            cur_col = col
+            for step in steps:
+                cur_row += d_row
+                cur_col += d_col
+                temp_position = [cur_row, cur_col]
+                if valid_position(temp_position, self.board):
+                    opposite_piece = self.board.data[cur_row][cur_col].startswith(opposite_size[side])
+                    blank_field = self.board.data[cur_row][cur_col] == '.'
+                    if opposite_piece or blank_field:
+                        legal_moves.append((cur_row, cur_col))
+                    if opposite_piece:
+                        break
+                    if self.board.data[cur_row][cur_col].startswith(side):
+                        break
+                else:
+                    break
+        
+        return legal_moves
 
     def get_value_(self):
-        # TODO
-        pass
+        return 3
 
 
 class Rook(Piece):
@@ -111,12 +175,37 @@ class Rook(Piece):
     Top
     """
     def get_legal_moves(self):
-        # TODO
-        pass
+        row = self.row
+        col = self.col
+        side = self.side
+        legal_moves = []
+
+        steps = range(0, self.board.rows)
+        directions = [(1,0), (0,1), (-1,0), (0, -1)]
+
+        for (d_row, d_col) in directions:
+            cur_row = row
+            cur_col = col
+            for step in steps:
+                cur_row += d_row
+                cur_col += d_col
+                temp_position = [cur_row, cur_col]
+                if valid_position(temp_position, self.board):
+                    opposite_piece = self.board.data[cur_row][cur_col].startswith(opposite_size[side])
+                    blank_field = self.board.data[cur_row][cur_col] == '.'
+                    if opposite_piece or blank_field:
+                        legal_moves.append((cur_row, cur_col))
+                    if opposite_piece:
+                        break
+                    if self.board.data[cur_row][cur_col].startswith(side):
+                        break
+                else:
+                    break
+        
+        return legal_moves
 
     def get_value_(self):
-        # TODO
-        pass
+        return 5
 
 
 class Queen(Piece):
@@ -124,12 +213,38 @@ class Queen(Piece):
     Kraljica
     """
     def get_legal_moves(self):
-        # TODO
-        pass
+        row = self.row
+        col = self.col
+        side = self.side
+        legal_moves = []
+
+        steps = range(0, self.board.rows)
+        directions = [(1,0), (0,1), (-1,0), (0, -1), (1,1), (-1,-1), (1, -1), (-1, 1)]
+
+        for (d_row, d_col) in directions:
+            cur_row = row
+            cur_col = col
+            for step in steps:
+                cur_row += d_row
+                cur_col += d_col
+                temp_position = [cur_row, cur_col]
+                if valid_position(temp_position, self.board):
+                    opposite_piece = self.board.data[cur_row][cur_col].startswith(opposite_size[side])
+                    blank_field = self.board.data[cur_row][cur_col] == '.'
+                    if opposite_piece or blank_field:
+                        legal_moves.append((cur_row, cur_col))
+                    if opposite_piece:
+                        break
+                    if self.board.data[cur_row][cur_col].startswith(side):
+                        break
+                else:
+                    break
+        
+        return legal_moves
+
 
     def get_value_(self):
-        # TODO
-        pass
+        return 9
 
 
 class King(Piece):
@@ -137,9 +252,25 @@ class King(Piece):
     Kralj
     """
     def get_legal_moves(self):
-        # TODO
-        pass
+        row = self.row
+        col = self.col
+        side = self.side
+        legal_moves = []
+        directions = [(1,1), (1,0), (0,1), (-1, -1), (0,-1), (-1, 0),(-1, 1), (1, -1)]
+        
+        for (d_row, d_col) in directions:
+            cur_row = row + d_row
+            cur_col = col + d_col
+            temp_position = [cur_row, cur_col]
+            if valid_position(temp_position, self.board):
+                opposite_piece = self.board.data[cur_row][cur_col].startswith(opposite_size[side])
+                blank_field = self.board.data[cur_row][cur_col] == '.'
+                if opposite_piece or blank_field:
+                    legal_moves.append((cur_row, cur_col))
+                if opposite_piece:
+                    break
+        
+        return legal_moves
 
     def get_value_(self):
-        # TODO
-        pass
+        return 1000

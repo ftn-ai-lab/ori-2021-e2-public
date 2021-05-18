@@ -23,6 +23,8 @@ class Board:
                       'wq']  # beli kraljica
 
         self.data = [['.'] * cols for _ in range(rows)]
+        self.game_over = False
+        self.score = 0
 
     def load_from_file(self, file_path):
         """
@@ -35,6 +37,7 @@ class Board:
         while row != '':
             self.data.append(list(row.split()))
             row = board_f.readline().strip('\n')
+        self.count_score()
         board_f.close()
 
     def save_to_file(self, file_path):
@@ -58,8 +61,13 @@ class Board:
         """
         if to_row < len(self.data) and to_col < len(self.data[0]):
             t = self.data[from_row][from_col]
+            previous_piece = self.determine_piece(to_row, to_col)
             self.data[from_row][from_col] = '.'
-            self.data[to_row][to_col] = t
+            self.data[to_row][to_col] = t 
+            if previous_piece:
+                if previous_piece.get_value_() == 1000:
+                    self.game_over = True
+                self.score -= previous_piece.get_value()
 
     def clear(self):
         """
@@ -94,4 +102,27 @@ class Board:
             piece = elem[1]  # kod figure
             if piece == 'p':
                 return Pawn(self, row, col, side)
-            # TODO: dodati za ostale figure
+            elif piece == 'r':
+                return Rook(self, row, col, side)
+            elif piece == 'b':
+                return Bishop(self, row, col, side)
+            elif piece == 'n':
+                return Knight(self, row, col, side)
+            elif piece == 'k':
+                return King(self, row, col, side)
+            elif piece == 'q':
+                return Queen(self, row, col, side)
+
+
+    
+    def count_score(self):
+        rows = range(self.rows) #cini mise da ovarko radi brze jer python pravi range pri svakom izvrsavanju ukoliko stoji u for petlji
+        cols = range(self.cols)
+
+        for row in rows:
+            for col in cols:
+                piece = self.determine_piece(row, col)
+                if piece:
+                    value = piece.get_value()
+                    self.score += value
+        
